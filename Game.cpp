@@ -1,5 +1,4 @@
-﻿#include <iostream>
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <sstream>
 
@@ -16,6 +15,12 @@ int main()
     sf::SoundBuffer soundBuff;
     sf::Sound sound;
     sf::Music music;
+    sf::Text score_txt;
+    std::ostringstream sscore;
+    auto velocity_x = -2.f;
+    auto velocity_y = 3.f;
+    auto score = 0;
+
     music.openFromFile("GameOver.ogg");
     soundBuff.loadFromFile("Bounce.wav");
     sound.setBuffer(soundBuff);
@@ -24,16 +29,10 @@ int main()
     rect.setPosition(rect_pos);
     circle.setRadius(10.5);
     circle.setPosition(circle_pos);
-    auto velocity_x = -2.f;
-    auto velocity_y = 3.f;
-    auto score = 0;
-    std::ostringstream sscore;
     sscore << "Score:" << score;
-    sf::Text score_txt;
     score_txt.setPosition({ 170.f,0.f });
     score_txt.setFont(font);
     score_txt.setString(sscore.str());
-
 
     while (window.isOpen())
     {
@@ -44,6 +43,7 @@ int main()
                 window.close();
             if (event.type == sf::Event::KeyPressed)
             {
+                //Player Movement
                 switch (event.key.code)
                 {
                 case sf::Keyboard::W:
@@ -64,6 +64,7 @@ int main()
         rect.setPosition(rect_pos);
         circle_pos.x += velocity_x;
         circle_pos.y += velocity_y;
+        //physics
         if (circle_pos.y+10.5> 400||circle_pos.y+10.5<50)
             velocity_y *= -1;
         if (circle_pos.x>500)
@@ -77,6 +78,7 @@ int main()
                 score_txt.setString(sscore.str());
                 sound.play();
             }
+        //game over
         if (circle_pos.x == 0)
             music.play();
 
